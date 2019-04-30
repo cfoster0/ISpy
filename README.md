@@ -16,7 +16,7 @@ public class MyComponent : Spyable
 {
 	private float number;
 
-    public float MyNumber
+	public float MyNumber
 	{
 		get
 		{
@@ -25,14 +25,14 @@ public class MyComponent : Spyable
 		set
 		{
 			number = value;
-            Leak();
+            		Leak();
 		}
 	}
 
 	override private void Awake()
 	{
-        // Comment out line below to disable spy
-        base.Awake();
+		// Comment out line below to disable spy
+		base.Awake();
 	}
 }
 ```
