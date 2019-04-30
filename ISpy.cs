@@ -265,13 +265,12 @@ namespace ISpy
     }
 
     /// <summary>
-    /// Class for tracking GameObject positions, specified to GameObjects
+    /// Component for tracking GameObject positions, specified to GameObjects
     /// with a component of type T.
     /// </summary>
     /// <remarks>
-    /// This class maintains a set of tracked transforms, with methods
-    /// to add and remove them. Used in the TrackedObject and 
-    /// OmniscientTracker components.
+    /// This component maintains a set of tracked transforms, with methods
+    /// to add and remove them.
     /// </remarks>
     public class Tracker<T> : MonoBehaviour
         where T : MonoBehaviour
@@ -294,6 +293,18 @@ namespace ISpy
             foreach (T component in components)
             {
                 tracked.Add(component.transform);
+            }
+        }
+
+                private void LateUpdate()
+        {
+            foreach (Transform t in tracker.tracked)
+            {
+                if (t.hasChanged)
+                {
+                    StateChange change = new StateChange(t.gameObject, typeof(Transform), t);
+                    log.Append(Time.time, change);
+                }
             }
         }
     }
@@ -476,7 +487,7 @@ namespace ISpy
         public delegate void AppendHandler<T, D>(LogArgs<T, D> args);
 
         /// <summary>
-        /// Append-only log interface, with type T for log timestamp and type D for log data.
+        /// Append-only log interface, with an IComparable type T for its timestamps and type D for its data.
         /// </summary>
         /// <typeparam name="T">Type of log timestamp</typeparam>
         /// <typeparam name="D">Type of log entry</typeparam>
